@@ -21,7 +21,6 @@ The skill package itself is the repository content, centered on:
 - [`SKILL.md`](./SKILL.md)
 - [`agents/openai.yaml`](./agents/openai.yaml)
 - [`scripts/rename_photos.py`](./scripts/rename_photos.py)
-- [`assets/samples/ricoh-gr4/`](./assets/samples/ricoh-gr4/)
 
 If you are managing skills locally, copy this folder into your skills location and keep the `SKILL.md` file at the root of the skill folder.
 
