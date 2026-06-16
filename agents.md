@@ -24,8 +24,9 @@ This skill exists to rename picture files automatically using the camera metadat
 
 ## Working Notes
 
-- Record major development prompts in [`prompts.md`](./prompts.md).
+- Automatically record major development prompts in [`prompts.md`](./prompts.md) as work happens.
 - Use timestamped entries with `Goal`, `Prompt Summary`, and `Technical Context`.
 - Paraphrase messy or repetitive prompts in the log instead of copying them verbatim.
-- Sample photos for the Ricoh GR4 live in [`assets/samples/ricoh-gr4/`](./assets/samples/ricoh-gr4/).
-- Skill metadata lives under [`a.agents/`](./a.agents/).
+- Keep the log current whenever a substantial prompt changes direction, scope, or implementation details.
+- Sample photos currently exist only for the Ricoh GR4 in [`assets/samples/ricoh-gr4/`](./assets/samples/ricoh-gr4/).
+- Skill metadata lives under [`agents/`](./agents/).

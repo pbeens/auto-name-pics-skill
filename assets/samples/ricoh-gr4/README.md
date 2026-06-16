@@ -1,5 +1,7 @@
 # Ricoh GR4 Samples
 
+This is the only sample camera folder currently added.
+
 Place sample photos taken with a Ricoh GR4 in this folder.
 
 Use this directory for camera-specific test images when validating filename generation or metadata handling.

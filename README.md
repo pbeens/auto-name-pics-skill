@@ -2,7 +2,7 @@
 Skill package for renaming pictures in place based on EXIF camera metadata and capture date.
 
 See [prompts.md](./prompts.md) for the development prompt log format and recorded entries.
-Skill metadata is stored locally under [`a.agents/`](./a.agents/), not in a Codex home folder.
+Skill metadata is stored locally under [`agents/`](./agents/), not in a Codex home folder.
 
 ## Usage
 
@@ -17,3 +17,7 @@ For example, on macOS you can install it with Homebrew:
 ```bash
 brew install exiftool
 ```
+
+Current sample coverage:
+
+- Ricoh GR4 only, under [`assets/samples/ricoh-gr4/`](./assets/samples/ricoh-gr4/)

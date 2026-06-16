@@ -25,8 +25,8 @@ Use this skill when you need to rename photo files in place from their EXIF meta
 
 - Use [`scripts/rename_photos.py`](scripts/rename_photos.py) for the renaming logic.
 - The script depends on `exiftool` being installed and available on `PATH`.
-- Sample files live under [`assets/samples/ricoh-gr4/`](assets/samples/ricoh-gr4/).
-- Skill UI metadata lives in [`a.agents/openai.yaml`](a.agents/openai.yaml).
+- Sample files currently exist only for Ricoh GR4 under [`assets/samples/ricoh-gr4/`](assets/samples/ricoh-gr4/).
+- Skill UI metadata lives in [`agents/openai.yaml`](agents/openai.yaml).
 
 ## Examples
 
