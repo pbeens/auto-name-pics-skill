@@ -1,0 +1,4 @@
+interface:
+  display_name: "Auto Name Pics"
+  short_description: "Rename photos from EXIF metadata"
+  default_prompt: "Use $auto-name-pics-skill to rename camera photos in place from EXIF metadata."
