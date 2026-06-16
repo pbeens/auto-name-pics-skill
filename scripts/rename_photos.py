@@ -49,6 +49,7 @@ class PhotoMetadata:
     path: Path
     model: str
     capture_date: str
+    file_number: str
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -87,11 +88,14 @@ def iter_photo_files(paths: Iterable[Path]) -> list[Path]:
         if path.is_dir():
             files.extend(
                 sorted(
-                    p for p in path.iterdir() if p.is_file() and p.suffix.lower() in PHOTO_EXTENSIONS
+                    p
+                    for p in path.rglob("*")
+                    if p.is_file() and p.suffix.lower() in PHOTO_EXTENSIONS
                 )
             )
         elif path.is_file():
-            files.append(path)
+            if path.suffix.lower() in PHOTO_EXTENSIONS:
+                files.append(path)
         else:
             raise SystemExit(f"error: path does not exist: {path}")
     return files
@@ -102,6 +106,7 @@ def read_metadata(exiftool: str, path: Path) -> PhotoMetadata:
         exiftool,
         "-j",
         "-Model",
+        "-FileNumber",
         *[f"-{key}" for key in DATE_KEYS],
         str(path),
     ]
@@ -129,7 +134,14 @@ def read_metadata(exiftool: str, path: Path) -> PhotoMetadata:
     if not capture_date:
         raise SystemExit(f"error: missing capture date metadata for {path}")
 
-    return PhotoMetadata(path=path, model=model, capture_date=capture_date)
+    file_number = str(data.get("FileNumber", "")).strip()
+
+    return PhotoMetadata(
+        path=path,
+        model=model,
+        capture_date=capture_date,
+        file_number=file_number,
+    )
 
 
 def normalize_capture_date(value: str) -> str:
@@ -142,6 +154,9 @@ def normalize_capture_date(value: str) -> str:
 
 
 def camera_prefix(model: str) -> str:
+    if re.search(r"\bNIKON\s+Z\s+f\b", model, flags=re.IGNORECASE):
+        return "Zf"
+
     normalized = re.sub(r"^RICOH\s+", "", model.strip(), flags=re.IGNORECASE)
     normalized = normalized.upper()
     normalized = normalized.replace("GR IV", "GR-IV")
@@ -164,14 +179,26 @@ def embedded_number(path: Path) -> str:
     return f"{value:06d}"
 
 
-def build_target_name(path: Path, model: str, capture_date: str) -> str:
+def camera_number(photo: PhotoMetadata) -> str:
+    if re.search(r"\bNIKON\s+Z\s+f\b", photo.model, flags=re.IGNORECASE):
+        if not photo.file_number:
+            raise SystemExit(f"error: missing file number metadata for {photo.path}")
+        return photo.file_number
+    return embedded_number(photo.path)
+
+
+def build_target_name(photo: PhotoMetadata) -> str:
+    path = photo.path
+    model = photo.model
+    capture_date = photo.capture_date
     prefix = camera_prefix(model)
-    number = embedded_number(path)
-    return f"{prefix}-{number} {capture_date}{path.suffix}"
+    number = camera_number(photo)
+    separator = "_" if prefix == "Zf" else "-"
+    return f"{prefix}{separator}{number} {capture_date}{path.suffix}"
 
 
 def rename_photo(photo: PhotoMetadata, *, dry_run: bool) -> None:
-    target_name = build_target_name(photo.path, photo.model, photo.capture_date)
+    target_name = build_target_name(photo)
     target_path = photo.path.with_name(target_name)
     if target_path == photo.path:
         print(f"unchanged: {photo.path.name}")
