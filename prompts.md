@@ -182,7 +182,7 @@ Treat prompt logging as part of the repo workflow.
 
 **Prompt Summary**
 
-Update `agents.md` so major development prompts are automatically recorded in `prompts.md` as the work progresses.
+Update the repo notes so major development prompts are recorded in `prompts.md` as the work progresses.
 
 **Technical Context**
 
