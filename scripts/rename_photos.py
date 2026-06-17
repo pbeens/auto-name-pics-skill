@@ -48,6 +48,7 @@ PHOTO_EXTENSIONS = {
 class PhotoMetadata:
     path: Path
     model: str
+    make: str
     capture_date: str
     file_number: str
 
@@ -105,6 +106,7 @@ def read_metadata(exiftool: str, path: Path) -> PhotoMetadata:
     cmd = [
         exiftool,
         "-j",
+        "-Make",
         "-Model",
         "-FileNumber",
         *[f"-{key}" for key in DATE_KEYS],
@@ -121,6 +123,7 @@ def read_metadata(exiftool: str, path: Path) -> PhotoMetadata:
         raise SystemExit(f"error: no metadata returned for {path}")
     data = payload[0]
 
+    make = str(data.get("Make", "")).strip()
     model = str(data.get("Model", "")).strip()
     if not model:
         raise SystemExit(f"error: missing camera model metadata for {path}")
@@ -138,6 +141,7 @@ def read_metadata(exiftool: str, path: Path) -> PhotoMetadata:
 
     return PhotoMetadata(
         path=path,
+        make=make,
         model=model,
         capture_date=capture_date,
         file_number=file_number,
@@ -153,7 +157,10 @@ def normalize_capture_date(value: str) -> str:
     return "".join(match.groups())
 
 
-def camera_prefix(model: str) -> str:
+def camera_prefix(make: str, model: str) -> str:
+    if re.search(r"\bDJI\b", make, flags=re.IGNORECASE):
+        return "DJI"
+    
     if re.search(r"\bNIKON\s+Z\s+f\b", model, flags=re.IGNORECASE):
         return "Zf"
 
@@ -184,16 +191,23 @@ def camera_number(photo: PhotoMetadata) -> str:
         if not photo.file_number:
             raise SystemExit(f"error: missing file number metadata for {photo.path}")
         return photo.file_number
+    # DJI and Ricoh use embedded number from filename
     return embedded_number(photo.path)
 
 
 def build_target_name(photo: PhotoMetadata) -> str:
     path = photo.path
+    make = photo.make
     model = photo.model
     capture_date = photo.capture_date
-    prefix = camera_prefix(model)
+    prefix = camera_prefix(make, model)
     number = camera_number(photo)
-    separator = "_" if prefix == "Zf" else "-"
+    if prefix == "Zf":
+        separator = "_"
+    elif prefix == "DJI":
+        separator = " "
+    else:
+        separator = "-"
     return f"{prefix}{separator}{number} {capture_date}{path.suffix}"
 
 
