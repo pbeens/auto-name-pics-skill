@@ -161,8 +161,11 @@ def camera_prefix(make: str, model: str) -> str:
     if is_dji_camera(make, model):
         return "DJI"
 
-    if re.search(r"\bNIKON\s+Z\s+f\b", model, flags=re.IGNORECASE):
+    if is_nikon_zf(model):
         return "Zf"
+
+    if is_nikon_z6ii(model):
+        return "Z6_2"
 
     normalized = re.sub(r"^RICOH\s+", "", model.strip(), flags=re.IGNORECASE)
     normalized = normalized.upper()
@@ -198,6 +201,18 @@ def is_dji_camera(make: str, model: str) -> bool:
     return False
 
 
+def is_nikon_zf(model: str) -> bool:
+    return bool(re.search(r"\bNIKON\s+Z\s+f\b", model, flags=re.IGNORECASE))
+
+
+def is_nikon_z6ii(model: str) -> bool:
+    return bool(
+        re.search(r"\bNIKON\s+Z\s+6_2\b", model, flags=re.IGNORECASE)
+        or re.search(r"\bNIKON\s+Z\s+6\s+II\b", model, flags=re.IGNORECASE)
+        or re.search(r"\bNIKON\s+Z\s+6-II\b", model, flags=re.IGNORECASE)
+    )
+
+
 def embedded_number(path: Path) -> str:
     digits = re.findall(r"\d+", path.stem)
     if not digits:
@@ -207,7 +222,7 @@ def embedded_number(path: Path) -> str:
 
 
 def camera_number(photo: PhotoMetadata) -> str:
-    if re.search(r"\bNIKON\s+Z\s+f\b", photo.model, flags=re.IGNORECASE):
+    if is_nikon_zf(photo.model) or is_nikon_z6ii(photo.model):
         if not photo.file_number:
             raise SystemExit(f"error: missing file number metadata for {photo.path}")
         return photo.file_number
@@ -222,7 +237,7 @@ def build_target_name(photo: PhotoMetadata) -> str:
     capture_date = photo.capture_date
     prefix = camera_prefix(make, model)
     number = camera_number(photo)
-    if prefix == "Zf":
+    if prefix in {"Zf", "Z6_2"}:
         separator = "_"
     elif prefix == "DJI":
         separator = " "

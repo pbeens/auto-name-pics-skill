@@ -22,6 +22,7 @@ Use this skill when you need to rename photo files in place from their EXIF meta
 - DJI drones use `DJI <six-digit filename number> YYYYMMDD`.
 - Ricoh GR IV uses `GR-IV-<six-digit filename number> YYYYMMDD`.
 - Nikon Z f uses `Zf_<file number from EXIF> YYYYMMDD`.
+- Nikon Z 6_2 / Z6-II uses `Z6_2_<file number from EXIF> YYYYMMDD`.
 - Format the Ricoh embedded number as six digits with leading zeroes when needed.
 
 ## Implementation
@@ -29,7 +30,7 @@ Use this skill when you need to rename photo files in place from their EXIF meta
 - The script requires Python 3.
 - The script depends on `exiftool` being installed and available on `PATH`.
 - For macOS, install ExifTool so `exiftool` runs from Terminal. If `/usr/local/bin` is not already on `PATH`, add it. For Windows, install the executable version, rename `exiftool(-k).exe` to `exiftool.exe`, and place `exiftool.exe` plus `exiftool_files` in a folder on `PATH`.
-- Supported camera families currently include DJI drones, Ricoh GR IV, and Nikon Z f.
+- Supported camera families currently include DJI drones, Ricoh GR IV, Nikon Z f, and Nikon Z 6_2 / Z6-II.
 - DJI detection also covers common DJI EXIF model codes that do not literally include the string `DJI`.
 - Skill UI metadata lives in [`agents/openai.yaml`](agents/openai.yaml).
 
@@ -41,3 +42,4 @@ Use this skill when you need to rename photo files in place from their EXIF meta
 - `R0003565.DNG` -> `GR-IV-003565 20260611.DNG`
 - `DSC_8690.JPG` -> `Zf_8690 20260616.JPG`
 - `DSC_8690.NEF` -> `Zf_8690 20260616.NEF`
+- `DSC_2473.JPG` -> `Z6_2_2473 20260616.JPG`

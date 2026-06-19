@@ -8,7 +8,7 @@ Repo for a skill that renames camera photos in place using EXIF metadata.
 - Reads the capture date from metadata
 - Extracts the camera-specific number source
 - Renames files in place without modifying contents or moving them
-- Supports DJI drones, Ricoh GR IV, and Nikon Z f files
+- Supports DJI drones, Ricoh GR IV, Nikon Z f, and Nikon Z 6_2 / Z6-II files
 - Recognizes DJI bodies even when EXIF uses a coded model identifier
 
 ## Install
