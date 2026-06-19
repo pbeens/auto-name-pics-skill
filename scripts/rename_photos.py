@@ -158,9 +158,9 @@ def normalize_capture_date(value: str) -> str:
 
 
 def camera_prefix(make: str, model: str) -> str:
-    if re.search(r"\bDJI\b", make, flags=re.IGNORECASE):
+    if is_dji_camera(make, model):
         return "DJI"
-    
+
     if re.search(r"\bNIKON\s+Z\s+f\b", model, flags=re.IGNORECASE):
         return "Zf"
 
@@ -176,6 +176,26 @@ def camera_prefix(make: str, model: str) -> str:
     if not normalized:
         raise SystemExit(f"error: could not derive camera prefix from model: {model}")
     return normalized
+
+
+def is_dji_camera(make: str, model: str) -> bool:
+    """Recognize DJI bodies even when EXIF uses a coded model identifier."""
+
+    if re.search(r"\bDJI\b", make, flags=re.IGNORECASE):
+        return True
+    if re.search(r"\bDJI\b", model, flags=re.IGNORECASE):
+        return True
+    if re.search(r"\bFC\d+[A-Z]?\b", model, flags=re.IGNORECASE):
+        return True
+    if re.search(r"\bL\dD-\d+c\b", model, flags=re.IGNORECASE):
+        return True
+    if re.search(
+        r"\b(Mavic|Mini|Phantom|Inspire|Avata|Spark|Osmo|Ronin|Zenmuse)\b",
+        model,
+        flags=re.IGNORECASE,
+    ):
+        return True
+    return False
 
 
 def embedded_number(path: Path) -> str:

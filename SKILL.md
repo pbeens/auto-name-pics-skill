@@ -30,6 +30,7 @@ Use this skill when you need to rename photo files in place from their EXIF meta
 - The script depends on `exiftool` being installed and available on `PATH`.
 - For macOS, install ExifTool so `exiftool` runs from Terminal. If `/usr/local/bin` is not already on `PATH`, add it. For Windows, install the executable version, rename `exiftool(-k).exe` to `exiftool.exe`, and place `exiftool.exe` plus `exiftool_files` in a folder on `PATH`.
 - Supported camera families currently include DJI drones, Ricoh GR IV, and Nikon Z f.
+- DJI detection also covers common DJI EXIF model codes that do not literally include the string `DJI`.
 - Skill UI metadata lives in [`agents/openai.yaml`](agents/openai.yaml).
 
 ## Examples
